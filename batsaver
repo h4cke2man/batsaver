@@ -1,0 +1,24 @@
+#!/bin/bash
+
+while [ 1 ]
+do
+	batlevel0=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0|grep "percentage"| tr -d 'percentage','%',':')
+	batmin='20' #Choose the percent for warn you when you want
+
+	if [ $batlevel0 -le $batmin ]
+	then
+		 chargestate=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep state | grep discharging | tr -d "state:")
+                 echo $chargestate
+
+		stoploop='dichrging'
+
+		while [ $chargestate = $stoploop ]
+		do	
+                	mplayer PATH_OF_YOUR_SONG.mp3
+			chargestate=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep state | grep discharging | tr -d "state:")
+                        echo $chargestate
+			sleep 2
+		done
+	fi
+	sleep 20
+done
